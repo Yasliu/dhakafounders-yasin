@@ -13,6 +13,7 @@ Built on **Next.js (App Router)**, **TypeScript**, **Supabase SSR**, and **Clerk
 *   **Category Filter Chips**: Responsive selector buttons to filter startups by industry sectors (e.g., *FinTech*, *AgriTech*, *EdTech*, *Software*, *E-Commerce*).
 *   **Builder Cards**: Modern hover-animated cards displaying startup taglines, category badges, website/portfolio links, and founder metadata.
 *   **Direct Connect**: Highlighting founder names with direct links pointing to their public profile pages.
+*   **Dynamic Avatars**: Startup cards show the actual profile pictures of their creators, synced dynamically from their founder profiles (with automatic initials fallbacks if no image exists).
 
 ### 2. Multi-Startup Founder Dashboard
 *   **Decoupled Relations**: DEC-level structural change allowing a single founder to list and manage multiple startups under one account.
