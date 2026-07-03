@@ -49,6 +49,10 @@ Built on **Next.js (App Router)**, **TypeScript**, **Supabase SSR**, and **Clerk
 *   **Adaptive Grids**: Grids dynamically drop columns on smaller phone screens.
 *   **No Overflow**: Margin and padding thresholds optimized for standard `375px` to `414px` viewports.
 
+### 9. Page Transition Loading Indicators
+*   **Root Suspense Boundaries**: Configured a global `app/loading.tsx` handler that captures Next.js client-side page transitions.
+*   **Visual Indicators**: Features a top-running gradient progress bar showing active page fetching status, paired with a central glassmorphic spinner card displaying "Loading Page..." to prevent blank states.
+
 ---
 
 ## 🛠️ Technology Stack
