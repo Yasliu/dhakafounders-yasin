@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* ── Brand DNA Tokens (Tailwind v4 CSS-native config) ─────────────── */
+@theme inline {
+  /* Brand Colors */
+  --color-primary: #52796F;
+  --color-primary-light: #6B9C8F;
+  --color-primary-dark: #3E5C53;
+  --color-secondary: #E5989B;
+  --color-secondary-light: #F0B8BA;
+  --color-secondary-dark: #C97A7D;
+
+  /* Surfaces */
+  --color-surface: #0F1A17;
+  --color-surface-card: #162420;
+  --color-surface-elevated: #1C2E29;
+  --color-surface-glass: rgba(22, 36, 32, 0.7);
+
+  /* Text */
+  --color-text-primary: #F0F5F3;
+  --color-text-secondary: #A3B8B0;
+  --color-text-muted: #6B8A7F;
+
+  /* Fonts */
+  --font-heading: var(--font-outfit);
+  --font-body: var(--font-dm-sans);
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-slide-up: slide-up 0.6s ease-out forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
+  --animate-headline-cycle: headline-cycle 12s ease-in-out infinite;
+}
+
+/* ── Base Styles ──────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* ── Keyframes ────────────────────────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes headline-cycle {
+  0%, 28% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  33%, 95% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Glassmorphism Utility ────────────────────────────────────────── */
+.glass {
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(82, 121, 111, 0.15);
+}
+
+/* ── Gradient Text Utility ────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
