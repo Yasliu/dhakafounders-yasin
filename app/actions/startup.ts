@@ -92,6 +92,25 @@ export async function getMyFounderProfile() {
     return null;
   }
 
+  // Bidirectional sync check: Clerk -> Supabase
+  // If Clerk profile image changed directly, update our Supabase copy
+  try {
+    const user = await currentUser();
+    if (user && user.imageUrl && user.imageUrl !== data.avatar_url) {
+      const { data: updated } = await supabase
+        .from("founder_profile")
+        .update({ avatar_url: user.imageUrl })
+        .eq("clerk_auth_key", userId)
+        .select()
+        .single();
+      if (updated) {
+        return updated;
+      }
+    }
+  } catch (syncErr) {
+    console.error("Failed to sync Clerk profile image to Supabase:", syncErr);
+  }
+
   return data;
 }
 
@@ -108,6 +127,35 @@ export async function saveFounderProfile(input: FounderProfileInput) {
     throw new Error("Founder name is required");
   }
 
+  let finalAvatarUrl = input.avatar_url?.trim() || null;
+
+  // Dhaka Founders -> Clerk Sync
+  if (finalAvatarUrl && finalAvatarUrl.startsWith("data:")) {
+    try {
+      const mime = finalAvatarUrl.split(',')[0].match(/:(.*?);/)?.[1] || 'image/png';
+      const base64Data = finalAvatarUrl.split(',')[1];
+      const buffer = Buffer.from(base64Data, 'base64');
+      const blob = new Blob([buffer], { type: mime });
+
+      const client = await clerkClient();
+      const clerkUser = await client.users.updateUserProfileImage(userId, {
+        file: blob,
+      });
+      finalAvatarUrl = clerkUser.imageUrl;
+    } catch (clerkErr) {
+      console.error("Failed to sync profile picture to Clerk:", clerkErr);
+      // If Clerk upload fails, we still allow saving base64 to Supabase so it works
+    }
+  } else if (!finalAvatarUrl) {
+    // If the image was removed/cleared, delete it from Clerk too
+    try {
+      const client = await clerkClient();
+      await client.users.deleteUserProfileImage(userId);
+    } catch (clerkErr) {
+      console.error("Failed to delete profile picture from Clerk:", clerkErr);
+    }
+  }
+
   const cookieStore = await cookies();
   const token = await getSafeSupabaseToken(getToken);
   const supabase = createClient(cookieStore, token);
@@ -119,7 +167,7 @@ export async function saveFounderProfile(input: FounderProfileInput) {
     bio: input.bio?.trim() || null,
     linkedin_url: input.linkedin_url?.trim() || null,
     portfolio_url: input.portfolio_url?.trim() || null,
-    avatar_url: input.avatar_url?.trim() || null,
+    avatar_url: finalAvatarUrl,
   };
 
   const { data, error } = await supabase

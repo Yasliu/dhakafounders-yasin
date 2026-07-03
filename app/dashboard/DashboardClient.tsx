@@ -496,19 +496,6 @@ export function DashboardClient({ user, initialProfile, initialStartups }: Dashb
               />
             </div>
 
-            {/* Fallback URL Input */}
-            <div className="border-t border-primary/10 pt-4">
-              <label className="mb-2 block font-body text-xs font-semibold uppercase tracking-wider text-text-secondary">
-                Or enter remote image URL (optional)
-              </label>
-              <input
-                type="url"
-                placeholder="https://example.com/my-photo.jpg"
-                value={profileAvatar.startsWith("data:") ? "" : profileAvatar}
-                onChange={(e) => setProfileAvatar(e.target.value)}
-                className="w-full rounded-xl border border-primary/10 bg-surface px-4 py-3 font-body text-sm text-text-primary outline-none transition-all focus:border-primary/30"
-              />
-            </div>
 
             <div className="flex gap-3 border-t border-primary/10 pt-6">
               <button
