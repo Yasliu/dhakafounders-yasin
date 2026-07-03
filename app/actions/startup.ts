@@ -340,17 +340,44 @@ export async function getAllStartups() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const { data, error } = await supabase
+  // Fetch startups
+  const { data: startups, error: startupErr } = await supabase
     .from("company_profile")
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("Error fetching all startups:", error);
+  if (startupErr) {
+    console.error("Error fetching all startups:", startupErr);
     return [];
   }
 
-  return data || [];
+  // Fetch founder profiles to get the avatar URLs
+  const { data: profiles, error: profileErr } = await supabase
+    .from("founder_profile")
+    .select("clerk_auth_key, avatar_url");
+
+  if (profileErr) {
+    console.error("Error fetching founder profiles for avatars:", profileErr);
+    return startups || [];
+  }
+
+  // Create a map of clerk_auth_key -> avatar_url
+  const avatarMap = new Map<string, string>();
+  if (profiles) {
+    for (const p of profiles) {
+      if (p.clerk_auth_key && p.avatar_url) {
+        avatarMap.set(p.clerk_auth_key, p.avatar_url);
+      }
+    }
+  }
+
+  // Map avatar_url into startup items
+  const startupsWithAvatars = (startups || []).map((startup) => ({
+    ...startup,
+    founder_avatar_url: avatarMap.get(startup.clerk_auth_key) || null,
+  }));
+
+  return startupsWithAvatars;
 }
 
 /* ── ACCOUNT DELETION ACTION ────────────────────────────────────────── */

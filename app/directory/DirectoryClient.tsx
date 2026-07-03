@@ -25,6 +25,7 @@ interface Startup {
   founder_email?: string;
   linkedin_url?: string;
   created_at?: string;
+  founder_avatar_url?: string | null;
 }
 
 const INDUSTRIES = [
@@ -191,9 +192,17 @@ function StartupCard({ startup }: { startup: Startup }) {
         <div className="mb-4 flex items-start justify-between">
           <div className="flex items-center gap-3">
             {/* Founder Avatar */}
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/15 font-heading text-sm font-bold text-primary-light ring-2 ring-primary/10">
-              {initials || "F"}
-            </div>
+            {startup.founder_avatar_url ? (
+              <img
+                src={startup.founder_avatar_url}
+                alt={startup.founder_name}
+                className="h-11 w-11 rounded-full object-cover ring-2 ring-primary/10"
+              />
+            ) : (
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/15 font-heading text-sm font-bold text-primary-light ring-2 ring-primary/10">
+                {initials || "F"}
+              </div>
+            )}
             <div>
               <h3 className="font-heading text-base font-semibold text-text-primary group-hover:text-secondary transition-colors">
                 {startup.company_name}
